@@ -1,6 +1,8 @@
 # Process_CLIP_data
 A collection of R scripts used to process iCLIP or other types of CLIP data
 
+Scripts have been tested with R v4.0.4 and v4.1.0. They should also be compatible with earlier versions, at least back to v3.5. 
+
 ## iCLIP_Genialis_feature_annotation.R
 
 This script takes data that has been through the iCount pipeline (available on the iMaps platform from Jernej Ule's lab).
