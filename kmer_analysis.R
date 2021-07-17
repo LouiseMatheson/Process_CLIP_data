@@ -350,7 +350,8 @@ for(f in files_to_analyse) {
       lapply(bind_rows) %>%
       bind_rows(.id = "feature")  %>% 
       group_by(kmer, feature) %>% 
-        summarise(frequency = n(), .groups = "drop") 
+        summarise(frequency = n()) %>%
+        ungroup()
   }, mc.cores = p) %>%
       bind_rows(.id = "Sample") -> kmer_usage
   
@@ -368,7 +369,8 @@ for(f in files_to_analyse) {
     pivot_longer(-c(Sample, kmer), names_to = "feature", values_to = "Frequency") %>%
     mutate(Type = if_else(Sample == "XLsites", "XLsites", "Random")) %>%
     group_by(Type, kmer, feature) %>%
-    summarise(Mean = mean(Frequency), StDev = sd(Frequency), .groups = "drop") %>%
+    summarise(Mean = mean(Frequency), StDev = sd(Frequency)) %>%
+    ungroup() %>%
     #mutate(StDev = StDev + 1) %>% # Avoids issue of having s.d. = 0 if no samples have the kmer
     pivot_wider(id_cols = kmer, names_from = c(feature, Type), values_from = c(Mean, StDev)) %>%
     mutate(

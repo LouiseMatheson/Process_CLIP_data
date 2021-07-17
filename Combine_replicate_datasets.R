@@ -43,7 +43,8 @@ if("FDR" %in% colnames(all_data)) {
 
 all_data %>%
   group_by(chromosome, start, strand, Gene_name, Gene_ID, Feature) %>%
-  summarise(nReplicates = n(), mean_score = mean(score), sum_score = sum(score), .groups = "drop") %>%
+  summarise(nReplicates = n(), mean_score = mean(score), sum_score = sum(score)) %>%
+  ungroup() %>%
   rename(position = start) %>%
   filter(nReplicates >= min_Replicates) -> filtered_data
 
