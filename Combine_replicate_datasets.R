@@ -14,7 +14,7 @@
 # save and source script
 
 # Provide list of annotated replicate datasets:
-datasets <- list("iCLIP_rep1_chr3_200kb_annotated.tsv", "iCLIP_rep2_chr3_200kb_annotated.tsv", "iCLIP_rep3_chr3_200kb_annotated.tsv")
+datasets <- list("iCLIP_rep1_chr17_100kb_annotated.tsv", "iCLIP_rep2_chr17_100kb_annotated.tsv", "iCLIP_rep3_chr17_100kb_annotated.tsv")
 
 # Provide output filename for the combined data
 output_file <- "iCLIP_combined_replicates.txt"

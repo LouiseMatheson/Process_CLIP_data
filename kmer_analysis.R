@@ -81,7 +81,7 @@ library(tidyverse)
 #########################################################################################
 
 Args = commandArgs(trailingOnly=TRUE)
-
+Args <- c("iCLIP_combined_replicates.txt", "Mouse_GRCm38.90_chr17_100kb.gtf")
 gtf_file <- Args[grepl("gtf$|gtf.gz$", Args)]
 if(length(gtf_file) > 1) {
   warning("More than one GTF file provided; using only first listed")

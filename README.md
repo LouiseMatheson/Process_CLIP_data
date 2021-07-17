@@ -13,16 +13,16 @@ The script gives the flexibility to prioritise either 3'UTR (default) or CDS (--
 
 It also gives the option of running in a more detailed mode (--detailed), which will identify and report all possible genes and features to which the crosslink site could be assigned - note this will take a lot longer to run! 
 
-The script can be tested using the Mouse_GRCm38.90_chr3_200kb.gtf and three iCLIP...chr3_200kb.txt files as input; these files include data covering a 200kb region of chromosome 3 for replicate iCLIP datasets. The test can be run with default parameters by setting the working directory to test_data and replacing the line:
+The script can be tested using the Mouse_GRCm38.90_chr17_100kb.gtf and three iCLIP...chr17_100kb.txt files as input; these files include data covering a 100kb region of chromosome 17 (including genes such as Tnf, which is expected to be bound in the datasets provided) for replicate iCLIP datasets. The test can be run with default parameters by setting the working directory to test_data and replacing the line:
 ```
 Args <- commandArgs(trailingOnly=TRUE)
 ```
 with:
 ```
-Args <- c(list.files(pattern = "\\.gtf$"), list.files(pattern = "\\.txt$"))
+Args <- c(list.files(pattern = "\\.gtf$"), list.files(pattern = "100kb\\.txt$"))
 ```
 
-The expected outputs can be found in the iCLIP...chr3_200kb_annotated.tsv files. 
+The expected outputs can be found in the iCLIP...chr17_100kb_annotated.tsv files. 
 
 
 
@@ -40,7 +40,7 @@ The 'start' and 'end' columns are summarised into a single 'position' column (si
 
 The filtered data including only the sites that are significant in at least the specified number of replicates is saved out as a tab-delimited text file with the user-specified name.
 
-As written, the inputs specified are to take the three iCLIP...chr3_200kb_annotated.tsv files (in test_data) as input (with working directory set to test_data), and report only sites that are significant (FDR <= 0.05) in at least 2 replicates. The expected output file (iCLIP_combined_replicates.txt) is provided.
+As written, the inputs specified are to take the three iCLIP...chr17_100kb_annotated.tsv files (in test_data) as input (with working directory set to test_data), and report only sites that are significant (FDR <= 0.05) in at least 2 replicates. The expected output file (iCLIP_combined_replicates.txt) is provided.
 
 
 ## kmer_analysis.R
@@ -53,14 +53,14 @@ Z-scores are calculated for the whole gene and for each feature type (3'UTR, CDS
 
 The value of k is provided by the user (default 5).
 
-For full datasets, it is recommended to run with parallel processing on a computer cluster. However, the script can be tested on the iCLIP_combined_replicates.txt file, with Mouse_GRCm38.90_chr3_200kb.gtf, by setting the working directory to test_data and replacing the line:
+For full datasets, it is recommended to run with parallel processing on a computer cluster. However, the script can be tested on the iCLIP_combined_replicates.txt file, with Mouse_GRCm38.90_chr17_100kb.gtf, by setting the working directory to test_data and replacing the line:
 
 ```
 Args <- commandArgs(trailingOnly=TRUE)
 ```
 with:
 ```
-Args <- c("iCLIP_combined_replicates.txt", "Mouse_GRCm38.90_chr3_200kb.gtf")
+Args <- c("iCLIP_combined_replicates.txt", "Mouse_GRCm38.90_chr17_100kb.gtf")
 ```
 
-The expected output when run with default parameters (k = 5 and no subsampling) can be found in the iCLIP_combined_replicates_5mer_zscores.txt file. Note that due to the sparsity of the data, this test results in relatively low z scores and many NA values.
+The expected output when run with default parameters (k = 5 and no subsampling) can be found in the iCLIP_combined_replicates_5mer_zscores.txt file. Note that due to the sparsity of the data, this test results in relatively low z scores that are not very robust, and many NA values.
