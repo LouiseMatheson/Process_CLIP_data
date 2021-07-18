@@ -1,13 +1,34 @@
 # Process_CLIP_data
 A collection of R scripts used to process iCLIP or other types of CLIP data
 
-Scripts have been tested with R v4.0.4 and v4.1.0. They should also be compatible with earlier versions, at least back to v3.5. 
+## Requirements and installation
 
-## iCLIP_Genialis_feature_annotation.R
+Installation of the required software and packages should take < 30 min.
 
-This script takes data that has been through the iCount pipeline (available on the iMaps platform from Jernej Ule's lab).
+Depends on R and RStudio (optional), freely available to install on Windows, macOS or Linux here: 
+https://cran.r-project.org/index.html
+https://www.rstudio.com/products/rstudio/
 
-It requires the tidyverse package (available through CRAN with install.packages("tidyverse")), and the rtracklayer, GenomicRanges and GenomicFeatures packages, available through Bioconductor (BiocManager::install("package_name")).
+The code has been tested with R >= v4.0.0 and <= v4.1.0, and corresponding package versions. It should also be compatible with R v3.5 onwards although this is less thoroughly tested.
+
+To run all the scripts below, packages will need to be installed as follows (see details of which are required for each script in the corresponding sections):
+
+install.packages("tidyverse")
+install.packages("parallel")
+install.packages("BiocManager")
+BiocManager::install("GenomicRanges")
+BiocManager::install("rtracklayer")
+BiocManager::install("GenomicFeatures")
+BiocManager::install("BSgenome.Mmusculus.UCSC.mm10") 
+
+
+## Instructions and test data
+
+### iCLIP_Genialis_feature_annotation.R
+
+This script takes data that has been through the iCount pipeline (v2.0.1dev; https://icount.readthedocs.io/en/latest/); our data was processed through iMaps on the Genialis server (https://imaps.genialis.com/iclip).
+
+It requires the tidyverse, rtracklayer, GenomicRanges and GenomicFeatures packages, as well as BiocManager for installation of the latter three.
 
 Whilst some of the output files from iMaps include the genes to which each crosslink site maps, the features are not annotated. This script reannotates either the BED files containing only significant crosslink sites, or the tsv files containing all crosslink sites (with FDR annotated), together with a GTF file, and assigns the most likely gene/feature bound at that site. This is done in a hierarchical way - full details provided in annotation of the script. 
 
@@ -28,11 +49,11 @@ The expected outputs can be found in the iCLIP...chr17_100kb_annotated.tsv files
 
 
 
-## Combine_replicate_datasets.R
+### Combine_replicate_datasets.R
 
 This script takes as input a list of replicate datasets, and outputs the crosslink sites that identified as significant in at least a user-specified number of replicates. 
 
-It requires the tidyverse package, available through CRAN (install.packages("tidyverse"))
+It requires the tidyverse package.
 
 If an 'FDR' column is present in the data, it will be filtered to include only sites with FDR <= 0.05 (unless this value is amended by the user), otherwise, all sites in the dataset are assumed to be significant. 
 
@@ -45,11 +66,11 @@ The filtered data including only the sites that are significant in at least the 
 As written, the inputs specified are to take the three iCLIP...chr17_100kb_annotated.tsv files (in test_data) as input (with working directory set to test_data), and report only sites that are significant (FDR <= 0.05) in at least 2 replicates. The expected output file (iCLIP_combined_replicates.txt) is provided.
 
 
-## kmer_analysis.R
+### kmer_analysis.R
 
 This script takes a gtf file together with annotated iCLIP datasets (that have been through iCLIP_Genialis_feature_annotation.R above), and calculates z-scores for kmers of length specified by the user. Ideally, crosslink sites should be limited to only those that are significant, or can be the output from Combine_replicate_datasets.R. 
 
-It requires the tidyverse and parallel packages (available through CRAN with install.packages("package_name")), and the rtracklayer, BSgenome.Mmusculus.UCSC.mm10, GenomicRanges and GenomicFeatures packages, available through Bioconductor (BiocManager::install("package_name")).
+It requires the tidyverse, parallel, rtracklayer, BSgenome.Mmusculus.UCSC.mm10, GenomicRanges and GenomicFeatures packages, as well as BiocManager for installation of the Bioconductor packages.
 
 Z-scores are calculated for the whole gene and for each feature type (3'UTR, CDS, 5'UTR and intron). Sites mapping to non-coding genes or intergenic regions are excluded. By default all sites are analysed, but subsampling to ensure either that an equal number of sites are analysed between different datasets, or between different features within the same datasets, can be done - see details in the script annotation.
 
