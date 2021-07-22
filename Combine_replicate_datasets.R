@@ -23,8 +23,10 @@ output_file <- "iCLIP_combined_replicates.txt"
 min_Replicates <- 2
 
 # FDR threshold to filter data (if 'FDR' column present)
-FDRthresh <- 0.05
+FDRthresh <- 0.05 # will retain all <= threshold
 
+# Score threshold (if 'score' column present; optional - leave as 0 if you don't want to filter)
+score_thresh <- 0 # will retain all >= threshold
 
 library(tidyverse)
 
@@ -39,6 +41,11 @@ lapply(datasets, read_tsv, col_types = cols(chromosome = col_character())) %>%
 if("FDR" %in% colnames(all_data)) {
   all_data %>%
     filter(FDR <= FDRthresh) -> all_data
+}
+
+if("score" %in% colnames(all_data)) {
+  all_data %>%
+    filter(score >= score_thresh) -> all_data
 }
 
 all_data %>%

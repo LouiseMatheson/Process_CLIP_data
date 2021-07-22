@@ -15,8 +15,8 @@
 #(occurrence in iCLIP sequences - average occurrence in control sequences) / standard deviation of occurrence in control sequences
 
 # One issue I came across for larger values of k was that very occasionally, no occurrences were found in the randomised sites.
-# This was when running tests with only a few sample sets, but is theoretically possible
-# To avoid this being an issue and giving infinite z-scores, we add 1 to the standard deviation before dividing
+# This was when running tests with only a few sample sets, but is theoretically possible (and particularly if subsampling?)
+# One way to address this would be to add 1 to the sd - but decided better to just set these to NA as we cannot calculate accurately. 
 
 # Takes annotated crosslink site files, which should include gene/feature annotations, and assesses enrichment of kmers relative to random positions
 # Positions are randomised across all genes with at least one xlink site, with the same distribution across features as in the iCLIP dataset
@@ -371,7 +371,7 @@ for(f in files_to_analyse) {
     group_by(Type, kmer, feature) %>%
     summarise(Mean = mean(Frequency), StDev = sd(Frequency)) %>%
     ungroup() %>%
-    #mutate(StDev = StDev + 1) %>% # Avoids issue of having s.d. = 0 if no samples have the kmer
+    #mutate(StDev = StDev + 1) %>% # Avoids issue of having s.d. = 0 if no samples have the kmer - but instead of this now converting Inf to NA later
     pivot_wider(id_cols = kmer, names_from = c(feature, Type), values_from = c(Mean, StDev)) %>%
     mutate(
       zscore_gene = (Mean_Gene_XLsites - Mean_Gene_Random)/StDev_Gene_Random,
