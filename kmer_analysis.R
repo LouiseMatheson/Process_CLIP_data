@@ -81,7 +81,8 @@ library(tidyverse)
 #########################################################################################
 
 Args = commandArgs(trailingOnly=TRUE)
-Args <- c("iCLIP_combined_replicates.txt", "Mouse_GRCm38.90_chr17_100kb.gtf")
+# For testing:
+#Args <- c("iCLIP_combined_replicates.txt", "Mouse_GRCm38.90_chr17_100kb.gtf")
 gtf_file <- Args[grepl("gtf$|gtf.gz$", Args)]
 if(length(gtf_file) > 1) {
   warning("More than one GTF file provided; using only first listed")
@@ -306,10 +307,10 @@ for(f in files_to_analyse) {
     stop("Xlink site position column not identified - header should contain 'start' or 'position'")
   }
   
-  CDS_subset <- GPos(CDS[CDS$Gene_name %in% xlink_sites$gene_name])
-  ThreeUTR_subset <- GPos(ThreeUTR[ThreeUTR$Gene_name %in% xlink_sites$gene_name])
-  FiveUTR_subset <- GPos(FiveUTR[FiveUTR$Gene_name %in% xlink_sites$gene_name])
-  Intron_subset <- GPos(Intron[Intron$Gene_name %in% xlink_sites$gene_name])
+  CDS_subset <- GPos(GenomicRanges::reduce(CDS[CDS$Gene_name %in% xlink_sites$gene_name]))
+  ThreeUTR_subset <- GPos(GenomicRanges::reduce(ThreeUTR[ThreeUTR$Gene_name %in% xlink_sites$gene_name]))
+  FiveUTR_subset <- GPos(GenomicRanges::reduce(FiveUTR[FiveUTR$Gene_name %in% xlink_sites$gene_name]))
+  Intron_subset <- GPos(GenomicRanges::reduce(Intron[Intron$Gene_name %in% xlink_sites$gene_name]))
   
   ######################################################################################################################
   # 4b: Generate 100 sets of randomly sampled sites with the same distribution between feature types as the xlink sites
@@ -330,8 +331,7 @@ for(f in files_to_analyse) {
   
   mclapply(all_sites, function(x) {
     x %>%
-      flank(half_window, both = T) %>%
-      resize(window_size) -> sites
+      resize(window_size, fix = "center") -> sites
     getSeq(BSgenome.Mmusculus.UCSC.mm10, sites, as.character = T) %>%
       lapply(function(w) as_tibble_col(unique(substring(w, 1:substring_startL, k:window_size)), column_name = "kmer")) -> seq_substrings
     seq_substrings %>%
