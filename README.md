@@ -117,3 +117,4 @@ CD4 T cell 72h ZFP36 CLIP (GSE96074): min_Replicates <- 3
 The kmer_analysis.R script was not run as part of this publication, but could be run on either the individual replicate outputs from iCLIP_Genialis_feature_annotation.R, or on the combined replicate data, using the same GTF file as used for the annotation.
 
 
+[![DOI](https://zenodo.org/badge/386996690.svg)](https://zenodo.org/badge/latestdoi/386996690)
